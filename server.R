@@ -9,15 +9,12 @@ char_zips <- zctas(cb = TRUE, starts_with = c("10", "11"))
 data_plot = data %>% group_by(BUYER_ZIP) %>%
   summarise(num_transactions=n(), num_pills=sum(DOSAGE_UNIT),
             MME=sum(MME_Conversion_Factor*CALC_BASE_WT_IN_GM))
-char_zips <- geo_join(char_zips, 
-                      data_plot, 
-                      by_sp = "GEOID10", 
-                      by_df = "BUYER_ZIP",
-                      how = "inner")
+#char_zips <- geo_join(char_zips, 
+#                      data_plot, 
+#                      by_sp = "GEOID10", 
+#                      by_df = "BUYER_ZIP",
+#                      how = "inner")
 
-pal <- colorNumeric(
-  palette = "Greens",
-  domain = char_zips@data$num_pills)
 
 labels <- 
   paste0(
@@ -28,8 +25,24 @@ labels <-
   lapply(htmltools::HTML)
 
 shinyServer(function(input, output) {
+  data_zips <- reactive({
+    data_plot = data %>% filter(., lubridate::year(data$TRANSACTION_DATE)==input$year) %>% 
+      group_by(BUYER_ZIP) %>%
+      summarise(num_transactions=n(), num_pills=sum(DOSAGE_UNIT),
+                MME=sum(MME_Conversion_Factor*CALC_BASE_WT_IN_GM))
+   geo_join(char_zips, 
+                 data_plot, 
+                 by_sp = "GEOID10", 
+                 by_df = "BUYER_ZIP",
+                 how = "inner")  
+  })
+  
   output$mymap <- renderLeaflet({
-    char_zips %>% 
+    pal <- colorNumeric(
+      palette = "Greens",
+      domain = data_zips()@data$num_pills)
+    
+    data_zips() %>% 
       leaflet %>% 
       # add base map
       addProviderTiles("CartoDB") %>% 
