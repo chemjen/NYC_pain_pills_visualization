@@ -6,10 +6,14 @@ NYC['TRANSACTION_DATE'] = pd.to_datetime(NYC['TRANSACTION_DATE'], \
 	format='%m%d%Y')
 
 ## dropping redundant/repetitive columns
-NYC = NYC.drop(labels=["Ingredient_Name", "UNIT", "MME_Conversion_Factor", \
-	'DRUG_CODE','Measure', 'BUYER_STATE'], axis=1)
-NYC.to_csv('NYC_clean.csv', index=False)
+#NYC = NYC.drop(labels=["Ingredient_Name", "UNIT", "MME_Conversion_Factor", \
+#	'DRUG_CODE','Measure', 'BUYER_STATE'], axis=1)
+NYC = NYC[['Reporter_family', "REPORTER_STATE", "REPORTER_ZIP", 'DRUG_NAME', 
+	'TRANSACTION_DATE', 'BUYER_NAME', 'MME_Conversion_Factor', 'dos_str', 
+	"BUYER_ZIP", "CALC_BASE_WT_IN_GM","DOSAGE_UNIT"]]
 
+NYC.to_csv('NYC_clean.csv', index=False)
+quit()
 ## different years
 for year in range(2006,2015):
 	NYC.loc[pd.DatetimeIndex(NYC['TRANSACTION_DATE']).year ==year].\
