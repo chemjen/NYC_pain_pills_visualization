@@ -11,11 +11,9 @@ library(DT)
 
 data = read.csv('NYC_clean.csv')
 
-drugs = c("hydrocodone", "oxycodone") #, "both")
-
 years = sort(unique(lubridate::year(data$TRANSACTION_DATE)))
 
-
+parameters = c("MME", "Number of Transactions", "Number of Pills")
 
 
 
