@@ -5,28 +5,26 @@ shinyUI(
  ## Sidebar  
     dashboardSidebar(
       sidebarMenu(
-        menuItem("Map", tabName = "map", icon = icon("map"))#,
-#        menuItem("Data", tabName = "data", icon = icon("database")),
+        menuItem("Map", tabName = "map", icon = icon("map")),
+        menuItem("Data", tabName = "data", icon = icon("database")),
 #        selectizeInput("drugname",
 #                      "Select Drug",
 #                       drugs,
 #                       selected="hydrocodone"),
-#        selectizeInput("year",
-#                       "Select Year",
-#                       years,
-#                       selected=2010)
+        selectizeInput("year",
+                       "Select Year",
+                       years,
+                       selected=2010)
         )
        ),
     
   ## Body 
     dashboardBody(
       tabItems(
-        tabItem(tabName = "map", leafletOutput("mymap")) #,
-#       tabItem(tabName = "data", 
-#                fluidRow(box(DT::dataTableOutput("mytable"), width = 12)))
+        tabItem(tabName = "map", leafletOutput("mymap")),
+        tabItem(tabName = "data", 
+                fluidRow(box(DT::dataTableOutput("mytable"), width = 12)))
         )
-      
      )
-    
     )
   )

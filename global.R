@@ -14,3 +14,10 @@ data = read.csv('NYC_clean.csv')
 drugs = c("hydrocodone", "oxycodone") #, "both")
 
 years = sort(unique(lubridate::year(data$TRANSACTION_DATE)))
+
+
+
+
+
+
+
