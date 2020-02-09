@@ -1,6 +1,14 @@
-library(leaflet)
-library(tigris) 
-library(tidyverse)
+
+
+summarised_drugs <- read.csv("summarised_data.csv")
+
+summarised_reporters <- read.csv("major_drug_buyers.csv")
+
+summarised_pharmas <- read.csv("major_pharma_companies.csv")
+
+dose_strengths <- read.csv("dose_strengths.csv")
+
+dose_strengths$dose_strength = as.factor(dose_strengths$dos_str)
 
 options(tigris_use_cache = TRUE)
 char_zips <- zctas(cb = TRUE, starts_with = c("10", "11"))
@@ -95,7 +103,7 @@ shinyServer(function(input, output) {
       arrange(desc(num_transactions)) %>% head(10) %>% 
       ggplot(aes(x=Reporter_family, y=num_transactions)) + geom_col() +
       theme(axis.text.x = element_text(angle = 90)) + xlab("Drug Buyer") +
-      ylab("Number of Purchases")
+      ylab("Number of Transactions")
     
   )
   
@@ -105,24 +113,25 @@ shinyServer(function(input, output) {
       arrange(desc(num_transactions)) %>% head(10) %>% 
       ggplot(aes(x=Combined_Labeler_Name, y=num_transactions)) + geom_col() +
       theme(axis.text.x = element_text(angle = 90)) + xlab("Pharma Company") +
-      ylab("Number of Purchases / Zip Code")
+      ylab("Number of Transactions")
     
   )
   
   output$OxyTime <- renderPlot(
     dose_strengths %>% filter(., DRUG_NAME=="OXYCODONE") %>%
       ggplot(aes(x=year,y=count)) + geom_line(aes(color=dose_strength)) +
-      ylab("Count Oxycodone Orders")
+      ylab("Order Count") + ggtitle("Oxycodone")
   )
   
 output$HydroTime <- renderPlot(
   dose_strengths %>% filter(., DRUG_NAME=="HYDROCODONE") %>%
     ggplot(aes(x=year,y=count)) + geom_line(aes(color=dose_strength)) +
-    ylab("Count Hydrocodone Orders") + scale_fill_discrete(name = "Dose")
+    ylab("Order Count") + ggtitle("Hydrocodone")
 )
   
   output$MMEplot <- renderPlot(
-    data_zips()@data %>%  ggplot(aes(x=MME)) + geom_histogram(bins=30)
+    data_zips()@data %>%  ggplot(aes(x=MME)) + geom_histogram(bins=30) +
+      xlab("MME / Zip Code")
     #  geom_col() + xlab("zip code") + theme(axis.text.x = element_text(angle = 90))
   )
   output$TransactionsPlot <- renderPlot(

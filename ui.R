@@ -1,3 +1,5 @@
+
+
 shinyUI(
   dashboardPage(
  ## Header 
@@ -12,7 +14,7 @@ shinyUI(
                            label = "Select Drug(s):",
                            choices = c("Hydrocodone" = "HYDROCODONE", "Oxycodone" = "OXYCODONE"),
                            selected="HYDROCODONE"),
-        selectizeInput("year", "Select Year", years, selected=2010)
+        selectizeInput("year", "Select Year", 2006:2014, selected=2010)
         )),
   
   ## Body 
