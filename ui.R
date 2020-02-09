@@ -20,8 +20,11 @@ shinyUI(
       tabItems(
         tabItem(tabName = "map", leafletOutput("mymap")),
         tabItem(tabName = "charts", 
+                fluidRow(box(plotOutput("Buyers")), 
+                        box(plotOutput("Pharmas"))),
                 fluidRow(box(plotOutput("MMEplot")), 
-                      box(plotOutput("TransactionsPlot")))#,
+                      box(plotOutput("TransactionsPlot")),
+                      box(plotOutput("DoseStrengths")))#,
             #    fluidRow(plotOutput("DoseStrengths"), plotOutput("Buyers"),
             #            plotOutput("Reporters")
         )

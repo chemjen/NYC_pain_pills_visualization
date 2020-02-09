@@ -64,14 +64,37 @@ shinyServer(function(input, output) {
                 position = "bottomright")
   })
   
+  output$Buyers <- renderPlot(
+    data_year() %>% group_by(Reporter_family) %>% summarise(num_transactions=n()) %>% 
+      arrange(desc(num_transactions)) %>% head(10) %>% 
+      ggplot(aes(x=Reporter_family, y=num_transactions)) + geom_col() +
+      theme(axis.text.x = element_text(angle = 90)) + xlab("Drug Buyer") +
+      ylab("Number of Purchases")
+    
+  )
+  
+  output$Pharmas <- renderPlot(
+    data_year() %>% group_by(Combined_Labeler_Name) %>% 
+      summarise(num_transactions=n()) %>% 
+      arrange(desc(num_transactions)) %>% head(10) %>% 
+      ggplot(aes(x=Combined_Labeler_Name, y=num_transactions)) + geom_col() +
+      theme(axis.text.x = element_text(angle = 90)) + xlab("Pharma Company") +
+      ylab("Number of Purchases / Zip Code")
+    
+  )
+  
   output$MMEplot <- renderPlot(
     data_zips()@data %>%  ggplot(aes(x=MME)) + geom_histogram(bins=30)
     #  geom_col() + xlab("zip code") + theme(axis.text.x = element_text(angle = 90))
   )
   output$TransactionsPlot <- renderPlot(
-    data_zips()@data %>% ggplot(aes(x=num_transactions)) + geom_histogram(bins=30)
+    data_zips()@data %>% ggplot(aes(x=num_transactions)) + 
+      geom_histogram(bins=30) + xlab("Number of Transactions / Zip Code")
   )
-  
+  output$DoseStrengths <- renderPlot(
+    data_year() %>% ggplot(aes(x=dos_str)) + geom_bar() +
+      facet_wrap(~ DRUG_NAME, scales="free") + xlab("Dose Strength (mg)")
+  )
   
 })
 
