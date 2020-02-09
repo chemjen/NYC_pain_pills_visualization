@@ -2,19 +2,17 @@ library(leaflet)
 library(tigris) 
 library(tidyverse)
 
-zips = data$BUYER_ZIP
 options(tigris_use_cache = TRUE)
 char_zips <- zctas(cb = TRUE, starts_with = c("10", "11"))
 
-data_plot = data %>% group_by(BUYER_ZIP) %>%
-  summarise(num_transactions=n(), num_pills=sum(DOSAGE_UNIT),
-            MME=sum(MME_Conversion_Factor*CALC_BASE_WT_IN_GM))
-
 shinyServer(function(input, output) {
+  data_year <- reactive({
+    fname <- paste0("NYC", input$year, ".csv")
+    read.csv(fname) %>% filter(., DRUG_NAME %in% input$drugs)
+  })
+  
   data_zips <- reactive({
-    data_plot = data %>% 
-      filter(., lubridate::year(data$TRANSACTION_DATE)==input$year,
-             DRUG_NAME %in% input$drugs) %>% 
+    data_plot = data_year() %>%
       group_by(BUYER_ZIP) %>%
       summarise(num_transactions=n(), num_pills=sum(DOSAGE_UNIT),
                 MME=sum(MME_Conversion_Factor*CALC_BASE_WT_IN_GM))
