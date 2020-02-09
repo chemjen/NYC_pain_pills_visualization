@@ -9,15 +9,16 @@ library(ggplot2)
 library(shinydashboard)
 library(DT)
 
-#data = read.csv('NYC_clean.csv')
-
-#years = sort(unique(lubridate::year(data$TRANSACTION_DATE)))
-
 years=2006:2014
 
-#parameters = c("MME", "Number of Transactions", "Number of Pills")
+summarised_drugs <- read.csv("summarised_data.csv")
 
+summarised_reporters <- read.csv("major_drug_buyers.csv")
 
+summarised_pharmas <- read.csv("major_pharma_companies.csv")
 
+dose_strengths <- read.csv("dose_strengths.csv")
+
+dose_strengths$dose_strength = as.factor(dose_strengths$dos_str)
 
 

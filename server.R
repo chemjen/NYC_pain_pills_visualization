@@ -6,6 +6,32 @@ options(tigris_use_cache = TRUE)
 char_zips <- zctas(cb = TRUE, starts_with = c("10", "11"))
 
 shinyServer(function(input, output) {
+  output$MMEtime <- renderPlot(
+    summarised_drugs %>% ggplot(aes(x=year,y=MME)) + 
+      geom_line(aes(color=DRUG_NAME)) 
+  )
+  output$TransactionsTime <- renderPlot(
+    summarised_drugs %>% ggplot(aes(x=year,y=num_transactions)) +
+      geom_line(aes(color=DRUG_NAME)) + ylab("Number of Purchases")
+  )
+  
+  output$PillsTime <- renderPlot(
+    summarised_drugs %>% ggplot(aes(x=year,y=num_pills)) +
+      geom_line(aes(color=DRUG_NAME)) + ylab("Number of Pills")
+  )
+  
+  output$ReporterTime <- renderPlot(
+    summarised_reporters %>% ggplot(aes(x=year, y=MME)) + 
+      geom_line(aes(color=Buyer)) +
+      facet_wrap(~ DRUG_NAME, scales="free", nrow=2, ncol=1)
+  )
+
+  output$PharmaTime <- renderPlot(
+    summarised_pharmas %>% ggplot(aes(x=year, y=MME)) + 
+      geom_line(aes(color=Pharma_Company)) + 
+      facet_wrap(~ DRUG_NAME, scales="free", nrow=2, ncol=1)
+  )
+  
   data_year <- reactive({
     fname <- paste0("NYC", input$year, ".csv")
     read.csv(fname) %>% filter(., DRUG_NAME %in% input$drugs)
@@ -82,6 +108,18 @@ shinyServer(function(input, output) {
       ylab("Number of Purchases / Zip Code")
     
   )
+  
+  output$OxyTime <- renderPlot(
+    dose_strengths %>% filter(., DRUG_NAME=="OXYCODONE") %>%
+      ggplot(aes(x=year,y=count)) + geom_line(aes(color=dose_strength)) +
+      ylab("Count Oxycodone Orders")
+  )
+  
+output$HydroTime <- renderPlot(
+  dose_strengths %>% filter(., DRUG_NAME=="HYDROCODONE") %>%
+    ggplot(aes(x=year,y=count)) + geom_line(aes(color=dose_strength)) +
+    ylab("Count Hydrocodone Orders") + scale_fill_discrete(name = "Dose")
+)
   
   output$MMEplot <- renderPlot(
     data_zips()@data %>%  ggplot(aes(x=MME)) + geom_histogram(bins=30)
