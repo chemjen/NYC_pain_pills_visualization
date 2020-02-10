@@ -64,7 +64,7 @@ shinyServer(function(input, output) {
     labels <- 
       paste0(
         "Zip Code: ",
-        char_zips@data$GEOID10, "<br/>",
+        data_zips()@data$GEOID10, "<br/>",
         "Number of Transactions: ",
         as.character(data_zips()@data$num_transactions), "<br/>",
         "Number of Pills: ",
